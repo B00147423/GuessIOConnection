@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebSocket Test</title>
+    <style>
+      button {
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #connectBtn {
+        background-color: #4CAF50;
+        color: white;
+      }
+      #disconnectBtn {
+        background-color: #f44336;
+        color: white;
+      }
+      #disconnectBtn:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      .message-input {
+        padding: 10px;
+        margin: 5px;
+        width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WebSocket Test</h1>
+    
+    <button id="connectBtn" onclick="connect()">Connect</button>
+    <button id="disconnectBtn" onclick="disconnect()" disabled>Disconnect</button>
+    
+    <div>
+      <input type="text" id="roomInput" class="message-input" placeholder="Room name" value="testroom">
+      <input type="text" id="messageInput" class="message-input" placeholder="Message">
+      <button onclick="sendChat()">Send Chat</button>
+      <button onclick="joinRoom()">Join Room</button>
+      <button onclick="leaveRoom()">Leave Room</button>
+    </div>
+    
+    <div style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;">
+      <h3>Twitch Bot Test</h3>
+      <input type="text" id="oauthInput" class="message-input" placeholder="OAuth token (oauth:xxx...)" style="width: 400px;">
+      <input type="text" id="nickInput" class="message-input" placeholder="Twitch username" value="your_username">
+      <input type="text" id="channelInput" class="message-input" placeholder="Channel name" value="#your_channel">
+      <button onclick="spawnBot()">Spawn Twitch Bot</button>
+    </div>
+    
+    <div id="log"></div>
+
+    <script>
+      let ws = null;
+      let autoReconnect = false;
+      const logElement = document.getElementById("log");
+
+      function log(msg) {
+        logElement.innerHTML += msg + "<br>";
+        console.log(msg);
+      }
+
+      function connect() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          log("⚠️ Already connected");
+          return;
+        }
+
+        try {
+          autoReconnect = true;
+          ws = new WebSocket("ws://localhost:9001");
+          updateButtonState();
+
+          ws.onopen = () => {
+            log("✅ Connected to WebSocket server");
+            // Send a join message when connected
+            joinRoom();
+            updateButtonState();
+          };
+
+          ws.onmessage = (e) => log("📩 Message: " + e.data);
+
+          ws.onerror = (e) => {
+            log("❌ Error: " + e);
+            if (autoReconnect) {
+              log("🔄 Attempting to reconnect in 2 seconds...");
+              setTimeout(connect, 2000);
+            }
+          };
+
+          ws.onclose = (e) => {
+            log("🔌 Disconnected: " + e.code + " " + e.reason);
+            updateButtonState();
+            if (autoReconnect && e.code !== 1000) {
+              log("🔄 Attempting to reconnect in 2 seconds...");
+              setTimeout(connect, 2000);
+            }
+          };
+        } catch (error) {
+          log("❌ Connection failed: " + error);
+          if (autoReconnect) {
+            setTimeout(connect, 2000);
+          }
+        }
+      }
+
+      function disconnect() {
+        if (ws) {
+          autoReconnect = false;
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.close(1000, "User disconnected");
+            log("⏳ Disconnecting...");
+          } else {
+            ws = null;
+            log("ℹ️ Not connected");
+          }
+          updateButtonState();
+        }
+      }
+
+      function sendChat() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          const room = document.getElementById("roomInput").value;
+          const message = document.getElementById("messageInput").value;
+          const jsonMsg = {
+            type: "chat",
+            room: room,
+            payload: message
+          };
+          ws.send(JSON.stringify(jsonMsg));
+          log("📤 Sent: " + JSON.stringify(jsonMsg));
+          document.getElementById("messageInput").value = "";
+        } else {
+          log("❌ Not connected");
+        }
+      }
+
+      function joinRoom() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          const room = document.getElementById("roomInput").value;
+          const jsonMsg = {
+            type: "join",
+            room: room
+          };
+          ws.send(JSON.stringify(jsonMsg));
+          log("📤 Joined room: " + room);
+        } else {
+          log("❌ Not connected");
+        }
+      }
+
+      function leaveRoom() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          const room = document.getElementById("roomInput").value;
+          const jsonMsg = {
+            type: "leave",
+            room: room
+          };
+          ws.send(JSON.stringify(jsonMsg));
+          log("📤 Left room: " + room);
+        } else {
+          log("❌ Not connected");
+        }
+      }
+
+      function spawnBot() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          const oauth = document.getElementById("oauthInput").value;
+          const nick = document.getElementById("nickInput").value;
+          const channel = document.getElementById("channelInput").value;
+          const jsonMsg = {
+            type: "spawn_bot",
+            oauth: oauth,
+            nick: nick,
+            channel: channel
+          };
+          ws.send(JSON.stringify(jsonMsg));
+          log("📤 Spawning Twitch bot for channel: " + channel);
+        } else {
+          log("❌ Not connected");
+        }
+      }
+
+      function updateButtonState() {
+        const connectBtn = document.getElementById("connectBtn");
+        const disconnectBtn = document.getElementById("disconnectBtn");
+        
+        const isConnected = ws && ws.readyState === WebSocket.OPEN;
+        const isConnecting = ws && ws.readyState === WebSocket.CONNECTING;
+        
+        connectBtn.disabled = isConnected || isConnecting;
+        disconnectBtn.disabled = !isConnected && !isConnecting;
+      }
+
+      // Auto-connect when page loads
+      window.onload = connect;
+    </script>
+  </body>
+</html>

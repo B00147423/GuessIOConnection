@@ -1,0 +1,5 @@
+{
+    "TWITCH_OAUTH": "oauth:your_twitch_oauth_token_here",
+    "TWITCH_NICK": "your_bot_username_here",
+    "TWITCH_CHANNEL": "#your_channel_here"
+}
