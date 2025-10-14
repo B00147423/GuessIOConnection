@@ -1,0 +1,11 @@
+prefix=C:/Users/beka/Downloads/grpc/build/install
+exec_prefix=C:/Users/beka/Downloads/grpc/build/install
+libdir=C:/Users/beka/Downloads/grpc/build/install/lib
+includedir=C:/Users/beka/Downloads/grpc/build/install/include
+
+Name: UTF8 Range
+Description: Google's UTF8 Library
+Version: 1.0
+Requires: absl_strings
+Libs: -L${libdir} -lutf8_validity -lutf8_range 
+Cflags: -I${includedir}

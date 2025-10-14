@@ -1,0 +1,10 @@
+prefix=C:/Users/beka/Downloads/grpc/build/install
+exec_prefix=C:/Users/beka/Downloads/grpc/build/install
+libdir=C:/Users/beka/Downloads/grpc/build/install/lib
+includedir=C:/Users/beka/Downloads/grpc/build/install/include
+
+Name: Protocol Buffers
+Description: Google's Data Interchange Format
+Version: 31.1.0
+Libs: -L${libdir} -lupb 
+Cflags: -I${includedir}
