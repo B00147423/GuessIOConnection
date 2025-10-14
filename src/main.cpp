@@ -9,9 +9,11 @@
 #include <csignal>
 #include <atomic>
 #include <fstream>
-#include <nlohmann/json.hpp>
+#include "libs/json.hpp"
 #include <cstdlib>
-
+#include <grpcpp/grpcpp.h>
+#include <grpcpp/server.h>
+#include <grpcpp/client_context.h>
 // global running flag
 std::atomic<bool> running(true);
 
@@ -28,8 +30,20 @@ nlohmann::json loadConfig(const std::string& path) {
 
 // get environment variable with fallback
 std::string getEnvVar(const std::string& key, const std::string& defaultValue = "") {
-    const char* val = std::getenv(key.c_str());
-    return val ? std::string(val) : defaultValue;
+    char* val = nullptr;
+    size_t len = 0;
+    errno_t err = _dupenv_s(&val, &len, key.c_str());
+    
+    if (err == 0 && val != nullptr) {
+        std::string result(val);
+        free(val); // _dupenv_s allocates memory that needs to be freed
+        return result;
+    }
+    
+    if (val != nullptr) {
+        free(val);
+    }
+    return defaultValue;
 }
 
 // signal handler
@@ -59,6 +73,7 @@ int main() {
         std::cout << "Creating GameProtocol...\n";
         auto gameProtocol = std::make_shared<GameProtocol>(&server);
         botManager.setGameProtocol(gameProtocol);
+
 
         std::cout << "Starting server...\n";
         server.start();
@@ -106,6 +121,7 @@ int main() {
         }
 
         server.broadcast(R"({"type":"system","payload":"server shutting down"})");
+
 
         io.stop();
         for (auto& t : pool) t.join();

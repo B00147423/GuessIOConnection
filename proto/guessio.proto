@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package guessio;
+
+// Define a simple Guess service
+service GuessService {
+  // Player joins a game
+  rpc JoinGame (JoinRequest) returns (JoinReply);
+
+  // Player sends a guess
+  rpc SendGuess (GuessRequest) returns (GuessReply);
+}
+
+// Messages
+message JoinRequest {
+  string username = 1;
+}
+
+message JoinReply {
+  string message = 1;
+}
+
+message GuessRequest {
+  string username = 1;
+  string guess = 2;
+}
+
+message GuessReply {
+  bool correct = 1;
+  string hint = 2;
+}

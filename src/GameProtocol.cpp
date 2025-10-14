@@ -49,7 +49,7 @@ void GameProtocol::handleCommand(const std::string& username, const std::string&
 
     // --- Start round (streamer only) ---
     if (lower == "!start") {
-        std::string word = "apple"; // TODO: fetch from FastAPI
+        std::string word = ""; // TODO: fetch from FastAPI
         std::cout << "[PROTO] Starting round with word: " << word << "\n";
         room->startRound(word);
         return;

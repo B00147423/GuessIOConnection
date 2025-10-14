@@ -22,7 +22,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{6704a6ef-2898-48ef-a659-d2b823931fec}</ProjectGuid>
-    <RootNamespace>GuessIOConnetion</RootNamespace>
+    <RootNamespace>GuessIOConnection</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -76,6 +76,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)third_party\grpc\include;$(ProjectDir)third_party\protobuf;$(ProjectDir)src\proto_core;$(ProjectDir)vcpkg\installed\x86-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,6 +92,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)third_party\grpc\include;$(ProjectDir)third_party\protobuf;$(ProjectDir)src\proto_core;$(ProjectDir)vcpkg\installed\x86-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,11 +109,16 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)third_party\grpc\include;$(ProjectDir)third_party\protobuf;$(ProjectDir)src\proto_core;$(ProjectDir)vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>grpc.lib;grpc++.lib;libprotobuf.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)third_party\grpc\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <!-- CustomBuildStep disabled -->
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -119,6 +128,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)third_party\grpc\include;$(ProjectDir)third_party\protobuf;$(ProjectDir)src\proto_core;$(ProjectDir)vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +160,26 @@
     <ClInclude Include="src\session.h" />
     <ClInclude Include="src\TwitchBotManager.h" />
     <ClInclude Include="src\TwitchClient.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="third_party\protobuf\protoc.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="proto\guessio.proto">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(ProjectDir)third_party\protobuf\protoc.exe" --cpp_out="$(ProjectDir)src\proto_core" --proto_path="$(ProjectDir)proto" "$(ProjectDir)proto\guessio.proto"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(ProjectDir)third_party\protobuf\protoc.exe" --cpp_out="$(ProjectDir)src\proto_core" --proto_path="$(ProjectDir)proto" "$(ProjectDir)proto\guessio.proto"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(ProjectDir)third_party\protobuf\protoc.exe" --cpp_out="$(ProjectDir)src\proto_core" --proto_path="$(ProjectDir)proto" "$(ProjectDir)proto\guessio.proto"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(ProjectDir)third_party\protobuf\protoc.exe" --cpp_out="$(ProjectDir)src\proto_core" --proto_path="$(ProjectDir)proto" "$(ProjectDir)proto\guessio.proto"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)src\proto_core\guessio.pb.h;$(ProjectDir)src\proto_core\guessio.pb.cc</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)src\proto_core\guessio.pb.h;$(ProjectDir)src\proto_core\guessio.pb.cc</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)src\proto_core\guessio.pb.h;$(ProjectDir)src\proto_core\guessio.pb.cc</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)src\proto_core\guessio.pb.h;$(ProjectDir)src\proto_core\guessio.pb.cc</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating protobuf files...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating protobuf files...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating protobuf files...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating protobuf files...</Message>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
