@@ -180,11 +180,7 @@ service GuessService {
 
 ## License
 
-This project is part of a university assignment. Please respect academic integrity guidelines.
 
-## 👥 Contributing
-
-This is an academic project. For questions or issues, please contact the repository owner.
 
 ---
 
