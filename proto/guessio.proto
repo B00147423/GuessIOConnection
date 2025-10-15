@@ -2,14 +2,6 @@ syntax = "proto3";
 
 package guessio;
 
-// Define a simple Guess service
-service GuessService {
-  // Player joins a game
-  rpc JoinGame (JoinRequest) returns (JoinReply);
-
-  // Player sends a guess
-  rpc SendGuess (GuessRequest) returns (GuessReply);
-}
 
 // Messages
 message JoinRequest {
@@ -28,4 +20,10 @@ message GuessRequest {
 message GuessReply {
   bool correct = 1;
   string hint = 2;
+}
+
+// gRPC Service
+service GuessService {
+  rpc JoinGame(JoinRequest) returns (JoinReply);
+  rpc MakeGuess(GuessRequest) returns (GuessReply);
 }

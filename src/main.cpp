@@ -12,8 +12,8 @@
 #include "libs/json.hpp"
 #include <cstdlib>
 #include <grpcpp/grpcpp.h>
-#include <grpcpp/server.h>
-#include <grpcpp/client_context.h>
+#include "grpc_server.h"
+
 // global running flag
 std::atomic<bool> running(true);
 
@@ -61,7 +61,7 @@ int main() {
         boost::asio::io_context io;
 
         std::cout << "Creating server...\n";
-        Server server(io, 9001);
+        ::Server server(io, 9001);
 
         std::cout << "Creating TwitchBotManager...\n";
         TwitchBotManager botManager(io, server);
@@ -107,6 +107,11 @@ int main() {
             std::cout << "Failed to spawn Twitch bot!\n";
         }
 
+
+        // Start gRPC server in a separate thread
+        std::thread grpcThread(StartGrpcServer);
+        grpcThread.detach();
+        std::cout << "[gRPC] Server thread launched.\n";
         // thread pool
         unsigned int numThreads = std::thread::hardware_concurrency();
         if (numThreads == 0) numThreads = 4;
