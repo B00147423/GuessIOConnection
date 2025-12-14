@@ -26,31 +26,7 @@ git lfs pull
 2. Select **Debug x64** or **Release x64** configuration
 3. Press **F5** or click **Build > Build Solution**
 
-**That's it!** The project will automatically generate protobuf files and compile with all dependencies included.
-
-## Project Structure
-
-```
-GuessIOConnection/
-├── src/                    # Source code
-│   ├── main.cpp           # Main application entry point
-│   ├── server.cpp/.h      # WebSocket server implementation
-│   ├── session.cpp/.h     # Client session management
-│   ├── room.cpp/.h        # Game room logic
-│   ├── roomManager.cpp/.h # Room management
-│   ├── TwitchClient.cpp/.h # Twitch API integration
-│   ├── TwitchBotManager.cpp/.h # Twitch bot management
-│   ├── GameProtocol.cpp/.h # Game protocol handling
-│   ├── libs/              # Third-party libraries
-│   └── proto_core/        # Generated protobuf files (auto-generated)
-├── proto/                 # Protocol buffer definitions
-│   └── guessio.proto     # Game service definition
-├── third_party/          # Pre-compiled dependencies
-│   ├── grpc/             # gRPC libraries and headers
-│   ├── protobuf/         # Protocol Buffers compiler and headers
-│   └── boost/            # Boost.Asio networking library
-├── config.example.json   # Configuration template
-└── GuessIOConnection.sln # Visual Studio solution file
+**That's it!** The project will automatically generate protobuf files and compile with all dependencies included.onnection.sln # Visual Studio solution file
 ```
 
 ## Technical Details
