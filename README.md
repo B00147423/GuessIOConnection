@@ -29,27 +29,6 @@ git lfs pull
 **That's it!** The project will automatically generate protobuf files and compile with all dependencies included.onnection.sln # Visual Studio solution file
 ```
 
-
-### Environment Variables
-- `TWITCH_OAUTH_TOKEN`: Your Twitch bot's OAuth token
-- `TWITCH_CHANNEL`: The Twitch channel to monitor
-
-## Development
-
-### Adding New Features
-1. **Protocol Changes**: Modify `proto/guessio.proto` and rebuild
-2. **Game Logic**: Update files in `src/` directory
-3. **Twitch Integration**: Modify `TwitchClient.cpp` and `TwitchBotManager.cpp`
-
-### Building from Command Line
-```bash
-# Using MSBuild
-msbuild GuessIOConnection.sln /p:Configuration=Debug /p:Platform=x64
-
-# Using Visual Studio Developer Command Prompt
-devenv GuessIOConnection.sln /build Debug
-```
-
 ### Debugging
 - Set breakpoints in Visual Studio
 - Use the built-in debugger for step-through debugging
