@@ -26,7 +26,7 @@ git lfs pull
 2. Select **Debug x64** or **Release x64** configuration
 3. Press **F5** or click **Build > Build Solution**
 
-**That's it!** The project will automatically generate protobuf files and compile with all dependencies included.onnection.sln # Visual Studio solution file
+**
 ```
 
 ### Debugging
@@ -70,7 +70,6 @@ service GuessService {
 - Check that `proto/guessio.proto` is valid
 
 ### Getting Help
-- Check the console output for detailed error messages
 - Verify all dependencies are correctly installed
 - Ensure configuration file is properly set up
 
